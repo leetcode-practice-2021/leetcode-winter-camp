@@ -42,7 +42,7 @@ class Solution {
             uf_set[i] = j;
         }
     }
-
+//[["David","David0@m.co","David1@m.co"],["David","David3@m.co","David4@m.co"],["David","David4@m.co","David5@m.co"],["David","David2@m.co","David3@m.co"],["David","David1@m.co","David2@m.co"]]
 public:
     vector<vector<string>> accountsMerge(vector<vector<string>>& accounts) {
         vector<vector<string>> res;
@@ -60,18 +60,27 @@ public:
                         //todo union
                         int num1 = find(uf_set, curIt->second[j]);
                         int num2 = find(uf_set, i);
+                        if(num1==num2){
+                            continue;
+                        }
                         //cout << "num1:" << num1 << "--num2:" << num2 << endl; 
                         unionTwo(uf_set, num1, num2);
-                        accounts[curIt->second[j]].insert(
-                            accounts[curIt->second[j]].end(),
-                            accounts[i].begin()+1,
-                            accounts[i].end() );
-                        break;
+                        if(num1>num2){
+                            int swapTemp = num1;
+                            num1 = num2;
+                            num2 = swapTemp;
+                        }
+                        accounts[num1].insert(
+                            accounts[num1].end(),
+                            accounts[num2].begin()+1,
+                            accounts[num2].end() );
+                        //break;
                     }
                 }
                 curIt->second.push_back(i);
             }
         }
+
         set<int> heads;
         for(int i = 0; i< uf_set.size(); ++i){
             //cout << uf_set[i] << endl;
